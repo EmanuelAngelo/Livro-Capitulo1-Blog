@@ -6,7 +6,7 @@
 https://wmazoni-sds1.netlify.app
 
 Blog é uma aplicação de pratica web do livro Aprendendo Django 3 com exemplos.
-
+1 Capitulo: Criando uma aplicação de blog
 
 
 # Tecnologias utilizadas
