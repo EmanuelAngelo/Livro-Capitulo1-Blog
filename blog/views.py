@@ -4,10 +4,13 @@ from .models import Post
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.views.generic import ListView
 from .forms import EmailPostForm
+#from django.core.email import send_mail
+
 
 def post_share(request, post_id):
     # obtem a postagem com base do id
     post = get_object_or_404(Post, id=post_id, status='published')
+    sent = False
 
     if request.method == 'POST':
         # formulario foi submetido
@@ -15,10 +18,15 @@ def post_share(request, post_id):
         if form.is_valid():
             # campos de formulario passaram pela validacao
             cd = form.cleaned_data
+            post_url = request.build_absolute_uri(post.get_absolute_url())
+            subject = f"{cd['name']} recommends you read" f"{post.title}"
+            message = f"Read {post.title} at {post_url} \n\n" f"{cd['name']}\'s comments: {cd['comments']}"
+            send_mail(subject, message, 'emanuelalmeida@undb.edu.br', [cd['to']])
+            sent = True
             #envia o email
         else:
             form = EmailPostForm()
-        return render(request, 'blog/post/share.html', {'post': post, 'form': form})
+        return render(request, 'blog/post/share.html', {'post': post, 'form': form, 'sent': sent})
 
 
 class PostListView(ListView):
